@@ -1,3 +1,6 @@
+#Importa Banco de dados mocados
+import users
+
 """
 Tips and notes:
     -As soon as you add new handlers to dispatcher, they are in effect.
@@ -24,12 +27,14 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 #Bot functions
 def start(update, context):
     reply_keyboard = [['Saldo', 'Extrato', 'Transferencia', 'Calcula']]
-    context.bot.send_message(chat_id=update.effective_chat.id, text= "Oi! Eu sou seu assistente pessoal da NuBank, o que quer fazer?")
-    
+    context.bot.send_message(chat_id=update.effective_chat.id, text= "Oi, eu sou seu assistente pessoal da NuBank!\nAntes de poder te ajudar, preciso fazer o seu cadastro!")
+    context.bot.send_message(chat_id=update.effective_chat.id, text= "Para isso, me envie seu CPF primeiro:")
+
 def echo(update, context):
     """Echoes sent message, testing usage only
     """
     context.bot.send_message(chat_id=update.effective_chat.id, text = update.message.text)
+
 #Command Handler
 from telegram.ext import CommandHandler
 start_handler = CommandHandler('start', start)
