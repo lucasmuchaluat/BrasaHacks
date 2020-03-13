@@ -53,9 +53,9 @@ extractD = "\
         Total:                    R$ 157.00\n\
         "
 
-usuario1 = Usuario(999, "Cleber", 1400, extractM, extractW, extractD)
-usuario2 = Usuario(888, "Joana", 7000, extractM, extractW, extractD)
-usuario3 = Usuario(777, "Lucas", -200 , extractM, extractW, extractD)
+usuario1 = Usuario(99999999999, "Cleber", 1400, extractM, extractW, extractD)
+usuario2 = Usuario(88888888888, "Joana", 7000, extractM, extractW, extractD)
+usuario3 = Usuario(77777777777, "Lucas", -200 , extractM, extractW, extractD)
 """
 
 
