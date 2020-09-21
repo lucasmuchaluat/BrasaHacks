@@ -16,8 +16,6 @@ Commands and requests:
 
 #Headers and bot initiation
 from telegram.ext import Updater
-updater = Updater(token = '1105160055:AAGkIIuk_M4B3r_uwumehJwJ8ZLwQDqylqo', use_context = True)
-dispatcher = updater.dispatcher
 
 #Function callers
 CPF = range(12)
@@ -30,15 +28,17 @@ logger = logging.getLogger(__name__)
 
 #Bot functions
 def start(update, context):
-    reply_keyboard = [['Saldo', 'Extrato', 'Transferencia', 'Calcula']]
+    #reply_keyboard = [['Saldo', 'Extrato', 'Transferencia', 'Calcula']]
     context.bot.send_message(chat_id=update.effective_chat.id, text= "Oi, eu sou seu assistente pessoal da NuBank!\nAntes de poder te ajudar, preciso fazer o seu cadastro!")
     context.bot.send_message(chat_id=update.effective_chat.id, text= "Para isso, me envie seu CPF primeiro(APENAS NUMEROS):")
+    print("start\n")
     return CPF
 
 def cpf(update, context):
+    print("entrei\n\n")
     cpf = update.message.from_user
     logger.info("CPF: %s", cpf)
-    update.message.reply_text("Obrigado! Agora digite a sua senha da NuConta")
+    context.bot.send_message(chat_id=update.effective_chat.id, text= "Obrigado! Agora digite a sua senha da NuConta")
     return SENHA
 
 def senha(update, context):
@@ -67,24 +67,31 @@ from telegram.ext import CommandHandler
 #start_handler = CommandHandler('start', start)
 #dispatcher.add_handler(start_handler)
 
-from telegram.ext import MessageHandler, Filters, ConversationHandler, CallbackQueryHandler
+from telegram.ext import MessageHandler, Filters, ConversationHandler, CallbackQueryHandler, InlineQueryHandler
 #echo_handler = MessageHandler(Filters.text, echo)
 #dispatcher.add_handler(echo_handler)
 
-conv_handler = ConversationHandler(
-    entry_points=[CommandHandler('start', start)],
+def main():
+    updater = Updater(token = '1105160055:AAGkIIuk_M4B3r_uwumehJwJ8ZLwQDqylqo', use_context = True)
+    dispatcher = updater.dispatcher
 
-    states={
-        #CPF: [MessageHandler(Filters.text, cpf)],
-        CPF: [CallbackQueryHandler(cpf)],
-        SENHA: [MessageHandler(Filters.text, senha)]
-    },
-    fallbacks = [CommandHandler("sair", sair)]
-)
-dispatcher.add_handler(conv_handler)
+    conv_handler = ConversationHandler(
+        entry_points=[CommandHandler('start', start)],
 
-#Log errors
-dispatcher.add_error_handler(error)
+        states={
+            #CPF: [MessageHandler(Filters.text, cpf)],
+            CPF: [InlineQueryHandler(cpf)],
+            SENHA: [MessageHandler(Filters.text, senha)]
+        },
+        fallbacks = [CommandHandler("sair", sair)]
+    )
+    dispatcher.add_handler(conv_handler)
 
-#Start the bot
-updater.start_polling()
+    #Log errors
+    dispatcher.add_error_handler(error)
+
+    #Start the bot
+    updater.start_polling()
+    updater.idle()          
+if __name__ == '__main__':
+    main()
